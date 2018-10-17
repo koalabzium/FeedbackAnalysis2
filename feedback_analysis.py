@@ -79,19 +79,25 @@ class Feedback:
                         data[key].append(el)
                     else:
                         data[key].append(int(el))
-
+        Feedback.find_missing_data(data)
         return data
 
     @staticmethod
     def read_json(file_path):
-        try:
-            with open(file_path) as json_file:
-                data = json.load(json_file)
-            return data
-        except FileNotFoundError:
-            raise FileNotFoundError("There is no such file.")
+        with open(file_path) as json_file:
+            data = json.load(json_file)
+        Feedback.find_missing_data(data)
+        return data
+
+    @staticmethod
+    def find_missing_data(d):
+        for key in d:
+            for el in d[key]:
+                if el != el:
+                    raise ValueError("There is data missing")
 
 
-f = Feedback('testowy.json')
-print(f.find_most_popular_airline())
+
+# f = Feedback('testowy.json')
+# print(f.find_most_popular_airline())
 

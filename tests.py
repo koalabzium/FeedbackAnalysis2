@@ -104,5 +104,20 @@ class TestAnalysisWithEmptyDictionary(unittest.TestCase):
         self.assertEqual([], result)
 
 
+class TestFindingMissingData(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.data = dict(message=["These", "are", "some", "messages"],
+                        airline_code=[8, 2, 2, 8],
+                        number_of_fellow_passengers=[2, 1, 1, 0],
+                        did_receive_compensation=[False, True, True, False],
+                        total_compensation_amount=[float("nan"), 2000, 500, 0])
+
+    def test_find_missing_data(self):
+        with self.assertRaises(ValueError):
+            Feedback.find_missing_data(self.data)
+
+
 if __name__ == '__main__':
     unittest.main()
