@@ -1,6 +1,7 @@
 # zgarnij wszystko w klasę
 # rób tylko na dictionaries
 #  OGARNIJ LEPIEJ CZYTANIE Z CSV... BO OBCIACH TROCHE NO ALE NO...
+# POMYŚL JAK ŁADNIE PRZEDTSAWIĆ DYSTRYBUCJĘ
 
 import csv
 import json
@@ -18,15 +19,20 @@ class Feedback:
         else:
             raise ValueError("This file format is not supported yet.")
 
+    def distribution_fellow_passengers(self):
+        number_of_fellow_passengers = self.feedback["number_of_fellow_passengers"]
+        distribution = dict((str(x) + " passengers have", str(number_of_fellow_passengers.count(x)) + " fellow passengers") for x in set(number_of_fellow_passengers))
+        return distribution
+
     def calculate_average_compensation_per_passenger(self):
         compensation_per_passenger = []
-        for compensation, passengers in zip(self.feedback['total_compensation_amount'], self.feedback['number_of_fellow_passengers']):
+        for compensation, passengers in zip(self.feedback['total_compensation_amount'],
+                                            self.feedback['number_of_fellow_passengers']):
             if compensation != 0:
-                compensation_per_passenger.append(compensation/(passengers+1))
+                compensation_per_passenger.append(compensation / (passengers + 1))
         if len(compensation_per_passenger) == 0:
-            raise ZeroDivisionError("There are no clients that got the compensation")
-        return sum(compensation_per_passenger)/len(compensation_per_passenger)
-
+            raise ZeroDivisionError("There are no passengers that got the compensation")
+        return sum(compensation_per_passenger) / len(compensation_per_passenger)
 
     def calculate_most_popular_airline(self):
         return max(set(self.feedback["airline_code"]), key=self.feedback["airline_code"].count)
@@ -39,8 +45,7 @@ class Feedback:
 
         if self.feedback["did_receive_compensation"] == 0:
             raise ZeroDivisionError("Did_receive_compensation column is empty.")
-        return count_receive/len(self.feedback["did_receive_compensation"])*100
-
+        return count_receive / len(self.feedback["did_receive_compensation"]) * 100
 
     @staticmethod
     def read_csv(file_path):
@@ -68,4 +73,4 @@ class Feedback:
 
 
 f = Feedback('testowy.json')
-print(f.calculate_got_compensation_percentage())
+print(f.distribution_fellow_passengers())
