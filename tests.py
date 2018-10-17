@@ -1,9 +1,6 @@
-# PRZETESTUJ:
-# - czy json i csv otwierają to samo
-
 import unittest
 from feedback_analysis import Feedback
-from create_data import generate_random_data, serialize_tojson, serialize_tocsv
+from create_data import generate_random_data, serialize_to_json, serialize_to_csv
 from os import remove
 
 
@@ -12,21 +9,21 @@ class TestReadingFile(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         data = generate_random_data(10)
-        serialize_tocsv(data, 'test_file.csv')
-        serialize_tojson(data, 'test_file.json')
+        serialize_to_csv(data, "test_file.csv")
+        serialize_to_json(data, "test_file.json")
 
     @classmethod
     def tearDownClass(cls):
-        remove('test_file.csv')
-        remove('test_file.json')
+        remove("test_file.csv")
+        remove("test_file.json")
 
     def test_file_format(self):
-        file_path = 'test_file'
+        file_path = "test_file"
         self.assertRaises(ValueError, Feedback, file_path)
 
     def test_same_read_format(self):
-        f1 = Feedback('test_file.json')
-        f2 = Feedback('test_file.csv')
+        f1 = Feedback("test_file.json")
+        f2 = Feedback("test_file.csv")
         self.assertEqual(f1.feedback, f2.feedback)
 
 
@@ -39,12 +36,12 @@ class TestAnalysisWithNormalData(unittest.TestCase):
                  number_of_fellow_passengers=[2, 1, 1, 0],
                  did_receive_compensation=[False, True, True, False],
                  total_compensation_amount=[0, 2000, 500, 0])
-        serialize_tojson(d, 'test_file.json')
-        cls.f = Feedback('test_file.json')
+        serialize_to_json(d, "test_file.json")
+        cls.f = Feedback("test_file.json")
 
     @classmethod
     def tearDownClass(cls):
-        remove('test_file.json')
+        remove("test_file.json")
 
     def test_calculate_average_compensation_per_passenger(self):
         result = self.f.calculate_average_compensation_per_passenger()
@@ -76,12 +73,12 @@ class TestAnalysisWithEmptyDictionary(unittest.TestCase):
                  number_of_fellow_passengers=[],
                  did_receive_compensation=[],
                  total_compensation_amount=[])
-        serialize_tojson(d, 'test_file.json')
-        cls.f = Feedback('test_file.json')
+        serialize_to_json(d, "test_file.json")
+        cls.f = Feedback("test_file.json")
 
     @classmethod
     def tearDownClass(cls):
-        remove('test_file.json')
+        remove("test_file.json")
 
     def test_calculate_average_compensation_per_passenger(self):
         with self.assertRaises(ZeroDivisionError):
@@ -119,5 +116,5 @@ class TestFindingMissingData(unittest.TestCase):
             Feedback.find_missing_data(self.data)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,3 @@
-# POMYŚL JAK ŁADNIE PRZEDTSAWIĆ DYSTRYBUCJĘ
-    # wwyawal breaka ziom
-
 import csv
 import json
 
@@ -13,7 +10,6 @@ class Feedback:
 
         elif file_path.lower().endswith(".csv"):
             feedback = Feedback.read_csv(file_path)
-
         else:
             raise ValueError("This file format is not supported yet.")
 
@@ -21,7 +17,7 @@ class Feedback:
 
     def distribution_fellow_passengers(self):
         number_of_fellow_passengers = self.feedback["number_of_fellow_passengers"]
-        distribution = [(int(x), number_of_fellow_passengers.count(x)) for x in set(number_of_fellow_passengers)]
+        distribution = [(x, number_of_fellow_passengers.count(x)) for x in set(number_of_fellow_passengers)]
 
         for el, key in sorted(distribution):
             print("Having " + str(el) + " fellow passengers has occurred " + str(key) + " times.")
@@ -30,8 +26,8 @@ class Feedback:
 
     def calculate_average_compensation_per_passenger(self):
         compensation_per_passenger = []
-        for compensation, passengers in zip(self.feedback['total_compensation_amount'],
-                                            self.feedback['number_of_fellow_passengers']):
+        for compensation, passengers in zip(self.feedback["total_compensation_amount"],
+                                            self.feedback["number_of_fellow_passengers"]):
             if compensation != 0:
                 compensation_per_passenger.append(compensation / (passengers + 1))
         if len(compensation_per_passenger) == 0:
@@ -44,7 +40,7 @@ class Feedback:
         if len(airline_code) == 0:
             raise ValueError("airline_code column is empty")
         airline_summary = [(x, airline_code.count(x)) for x in set(airline_code)]
-        airline_summary = sorted(airline_summary, key= lambda x: -x[1])
+        airline_summary = sorted(airline_summary, key=lambda x: -x[1])
         max_value = airline_summary[0][1]
         for k, v in airline_summary:
             if v == max_value:
@@ -55,14 +51,15 @@ class Feedback:
         return set(result)
 
     def calculate_got_compensation_percentage(self):
+        did_receive_compensation = self.feedback["did_receive_compensation"]
         count_receive = 0
-        for compensation in self.feedback["did_receive_compensation"]:
+        for compensation in did_receive_compensation:
             if compensation == 1:
                 count_receive += 1
 
-        if self.feedback["did_receive_compensation"] == 0:
+        if len(did_receive_compensation) == 0:
             raise ZeroDivisionError("Did_receive_compensation column is empty.")
-        return count_receive / len(self.feedback["did_receive_compensation"]) * 100
+        return count_receive / len(did_receive_compensation) * 100
 
     def extract_messages(self):
         return self.feedback["message"]
@@ -71,11 +68,11 @@ class Feedback:
     def read_csv(file_path):
         with open(file_path) as csv_file:
             reader = csv.DictReader(csv_file)
-            data = dict([('message', []), ('airline_code', []), ('number_of_fellow_passengers', []),
-                         ('did_receive_compensation', []), ('total_compensation_amount', [])])
+            data = dict([("message", []), ("airline_code", []), ("number_of_fellow_passengers", []),
+                         ("did_receive_compensation", []), ("total_compensation_amount", [])])
             for row in reader:
                 for key, el in row.items():
-                    if key == 'message' or key == "airline_code":
+                    if key == "message" or key == "airline_code":
                         data[key].append(el)
                     else:
                         data[key].append(int(el))
@@ -95,9 +92,3 @@ class Feedback:
             for el in d[key]:
                 if el != el:
                     raise ValueError("There is data missing")
-
-
-
-# f = Feedback('testowy.json')
-# print(f.find_most_popular_airline())
-
