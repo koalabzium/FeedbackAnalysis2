@@ -35,6 +35,19 @@ class Feedback:
             raise ZeroDivisionError("Number_of_fellow_passengers column is empty")
         return total_compensation_sum/passenger_number_sum
 
+    def calculate_most_popular_airline(self):
+        return max(set(self.feedback["airline_code"]), key=self.feedback["airline_code"].count)
+
+    def calculate_got_compensation_percentage(self):
+        count_receive = 0
+        for compensation in self.feedback["did_receive_compensation"]:
+            if compensation == 1:
+                count_receive += 1
+
+        if self.feedback["did_receive_compensation"] == 0:
+            raise ZeroDivisionError("Did_receive_compensation column is empty.")
+        return count_receive/len(self.feedback["did_receive_compensation"])*100
+
 
     @staticmethod
     def read_csv(file_path):
