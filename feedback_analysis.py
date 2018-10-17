@@ -18,7 +18,7 @@ class Feedback:
         else:
             raise ValueError("This file format is not supported yet.")
 
-    def calculate_average_compensation_per_passenger1(self):
+    def calculate_average_compensation_per_passenger(self):
         compensation_per_passenger = []
         for compensation, passengers in zip(self.feedback['total_compensation_amount'], self.feedback['number_of_fellow_passengers']):
             if compensation != 0:
@@ -27,13 +27,6 @@ class Feedback:
             raise ZeroDivisionError("There are no clients that got the compensation")
         return sum(compensation_per_passenger)/len(compensation_per_passenger)
 
-    def calculate_average_compensation_per_passenger2(self):
-
-        total_compensation_sum = sum(self.feedback['total_compensation_amount'])
-        passenger_number_sum = sum(self.feedback['number_of_fellow_passengers']) + len(self.feedback['number_of_fellow_passengers'])
-        if passenger_number_sum == 0:
-            raise ZeroDivisionError("Number_of_fellow_passengers column is empty")
-        return total_compensation_sum/passenger_number_sum
 
     def calculate_most_popular_airline(self):
         return max(set(self.feedback["airline_code"]), key=self.feedback["airline_code"].count)
