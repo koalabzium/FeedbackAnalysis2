@@ -80,17 +80,17 @@ class TestAnalysisWithEmptyDictionary(unittest.TestCase):
     def tearDownClass(cls):
         remove("test_file.json")
 
-    # def test_calculate_average_compensation_per_passenger(self):
-    #     with self.assertRaises(ZeroDivisionError):
-    #         self.f.calculate_average_compensation_per_passenger()
-    #
-    # def test_most_popular_airline(self):
-    #     with self.assertRaises(ValueError):
-    #         self.f.find_most_popular_airline()
+    def test_calculate_average_compensation_per_passenger(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.f.calculate_average_compensation_per_passenger()
+    
+    def test_most_popular_airline(self):
+        with self.assertRaises(ValueError):
+            self.f.find_most_popular_airline()
 
-    # def test_calculate_got_compensation_percentage(self):
-    #     with self.assertRaises(ZeroDivisionError):
-    #         self.f.calculate_got_compensation_percentage()
+    def test_calculate_got_compensation_percentage(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.f.calculate_got_compensation_percentage()
 
     def test_extract_messages(self):
         result = self.f.extract_messages()
