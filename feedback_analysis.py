@@ -30,44 +30,32 @@ class Feedback:
                                             self.feedback["number_of_fellow_passengers"]):
             if compensation != 0:
                 compensation_per_passenger.append(compensation / (passengers + 1))
-        try:
-            result = sum(compensation_per_passenger) / len(compensation_per_passenger)
-        except ZeroDivisionError:
-            print("There are no passengers that got the compensation, zero division")
-            return
-        return result
+        if len(compensation_per_passenger) == 0:
+            raise ZeroDivisionError("There are no passengers that got the compensation")
+
+        return sum(compensation_per_passenger) / len(compensation_per_passenger)
 
     def find_most_popular_airline(self):
         airline_code = self.feedback["airline_code"]
+        if len(airline_code) == 0:
+            raise ValueError("airline_code column is empty")
         result = []
         airline_summary = [(x, airline_code.count(x)) for x in set(airline_code)]
         airline_summary = sorted(airline_summary, key=lambda x: -x[1])
-        try:
-            max_value = airline_summary[0][1]
-            for k, v in airline_summary:
-                if v == max_value:
-                    result.append(k)
-                else:
-                    break
-        except IndexError:
-            print("Airline_code column is empty")
-            return
+        max_value = airline_summary[0][1]
+        for k, v in airline_summary:
+            if v == max_value:
+                result.append(k)
+            else:
+                break
         return set(result)
 
     def calculate_got_compensation_percentage(self):
         did_receive_compensation = self.feedback["did_receive_compensation"]
-        count_receive = 0
-        for compensation in did_receive_compensation:
-            if compensation == 1:
-                count_receive += 1
-
-        try:
-            result = count_receive / len(did_receive_compensation) * 100
-        except ZeroDivisionError:
-            print("Did_receive_compensation column is empty, zero division")
-            return
-
-        return result
+        if len(did_receive_compensation) == 0:
+            raise ZeroDivisionError("Did_receive_compensation column is empty, zero division")
+        count_receive = did_receive_compensation.count(1)
+        return count_receive / len(did_receive_compensation) * 100
 
     def extract_messages(self):
         return self.feedback["message"]
@@ -100,6 +88,3 @@ class Feedback:
             for el in d[key]:
                 if el != el:
                     raise ValueError("There is data missing")
-
-
-
